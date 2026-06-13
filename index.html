@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Telemetría en Tiempo Real</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; text-align: center; padding: 20px; }
+        .container { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 200px; }
+        h1 { color: #333; }
+        .valor { font-size: 24px; font-weight: bold; color: #007bff; margin-top: 10px; }
+        .actualizado { margin-top: 30px; color: #777; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <h1>Panel de Control ESP32 (Tiempo Real)</h1>
+    <p>Datos recibidos desde el microcontrolador vía WiFi</p>
+
+    <div class="container">
+        <div class="card">
+            <h3>Presión</h3>
+            <div class="valor" id="presion">-- hPa</div>
+        </div>
+        <div class="card">
+            <h3>Temperatura</h3>
+            <div class="valor" id="temperatura">-- °C</div>
+        </div>
+        <div class="card">
+            <h3>Dato Extra</h3>
+            <div class="valor" id="datoExtra">--</div>
+        </div>
+    </div>
+
+    <p class="actualizado">Última actualización del servidor: <span id="fecha">--</span></p>
+
+    <script>
+        function consultarServidor() {
+            fetch('/api/datos')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('presion').innerText = data.presion + " hPa";
+                    document.getElementById('temperatura').innerText = data.temperatura + " °C";
+                    document.getElementById('datoExtra').innerText = data.datoExtra;
+                    document.getElementById('fecha').innerText = data.fecha;
+                })
+                .catch(err => console.error("Error obteniendo datos de la API:", err));
+        }
+
+        // Consultar inmediatamente al cargar y luego cada 3 segundos
+        consultarServidor();
+        setInterval(consultarServidor, 3000);
+    </script>
+</body>
+</html>
