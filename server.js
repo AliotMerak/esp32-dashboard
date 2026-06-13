@@ -3,44 +3,46 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Habilitar la lectura de datos en formato JSON
+// OBLIGATORIO: Permitir que Express entienda el texto JSON que manda el ESP32
 app.use(express.json());
 
-// Variable global para almacenar el último dato recibido en la memoria RAM
+// Almacenamiento temporal en la memoria RAM del servidor
 let ultimosDatos = {
     presion: "0",
     temperatura: "0",
     datoExtra: "0",
-    fecha: "Esperando datos..."
+    fecha: "Esperando transmisión del ESP32..."
 };
 
-// Ruta 1: El ESP32 enviará sus datos simulados aquí
+// Mapear la ruta que el ESP32 usará mediante POST
 app.post('/api/datos', (req, res) => {
     const { presion, temperatura, datoExtra } = req.body;
     
-    // Guardamos los datos recibidos y añadimos la hora actual del servidor
+    // Almacenar las variables procesadas
     ultimosDatos = {
-        presion,
-        temperatura,
-        datoExtra,
+        presion: presion || "0",
+        temperatura: temperatura || "0",
+        datoExtra: datoExtra || "0",
         fecha: new Date().toLocaleTimeString()
     };
     
-    console.log("Datos recibidos del ESP32:", ultimosDatos);
-    res.status(200).json({ mensaje: "Datos guardados con éxito" });
+    console.log("Transmisión recibida con éxito:", ultimosDatos);
+    
+    // Responder con éxito para que el ESP32 marque Código 200
+    res.status(200).json({ estatus: "OK" });
 });
 
-// Ruta 2: La página web llamará aquí cada 3 segundos para refrescarse
+// Mapear la ruta que el navegador usará mediante GET cada 3 segundos
 app.get('/api/datos', (req, res) => {
     res.json(ultimosDatos);
 });
 
-// Ruta 3: Servir la página web principal (index.html)
+// Servir la interfaz visual HTML
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Iniciar el servidor
+// Iniciar la escucha en el puerto asignado por Render
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en el puerto ${PORT}`);
+    console.log(`API en línea y escuchando en el puerto ${PORT}`);
 });
