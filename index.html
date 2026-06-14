@@ -60,12 +60,12 @@
             fetch('/api/datos')
                 .then(res => res.json())
                 .then(data => {
-                    document.getElementById('temp1ra').innerHTML = data.temp1ra + ' <span class="unidad">°C</span>';
-                    document.getElementById('temp2da').innerHTML = data.temp2da + ' <span class="unidad">°C</span>';
-                    document.getElementById('temp3ra').innerHTML = data.temp3ra + ' <span class="unidad">°C</span>';
-                    document.getElementById('tempAgua').innerHTML = data.tempAgua + ' <span class="unidad">°C</span>';
-                    document.getElementById('tempAceite').innerHTML = data.tempAceite + ' <span class="unidad">°C</span>';
-                    document.getElementById('presionAceite').innerHTML = data.presionAceite + ' <span class="unidad">PSI</span>';
+                    document.getElementById('temp1ra').innerHTML = data.temp1ra + ' <span class="unidad">°F</span>';
+                    document.getElementById('temp2da').innerHTML = data.temp2da + ' <span class="unidad">°F</span>';
+                    document.getElementById('temp3ra').innerHTML = data.temp3ra + ' <span class="unidad">°F</span>';
+                    document.getElementById('tempAgua').innerHTML = data.tempAgua + ' <span class="unidad">°F</span>';
+                    document.getElementById('tempAceite').innerHTML = data.tempAceite + ' <span class="unidad">°F</span>';
+                    document.getElementById('presionAceite').innerHTML = data.presionAceite + ' <span class="unidad">BAR</span>';
                     document.getElementById('fecha').innerText = data.fecha;
                 })
                 .catch(err => console.error("Error de actualización:", err));
