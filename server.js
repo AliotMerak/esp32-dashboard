@@ -14,11 +14,12 @@ let ultimosDatos = {
     fecha: "Esperando transmisión del ESP32..."
 };
 
-// Mapear la ruta que el ESP32 usará mediante POST
-app.post('/api/datos', (req, res) => {
-    const { presion, temperatura, datoExtra } = req.body;
+// AHORA USAMOS GET: Recibe las variables directamente en la URL
+app.get('/api/enviar', (req, res) => {
+    // Extraer los parámetros de la URL (ej: ?presion=1012&temperatura=24&datoExtra=50)
+    const { presion, temperatura, datoExtra } = req.query;
     
-    // Almacenar las variables procesadas
+    // Almacenar los datos en la memoria RAM del servidor
     ultimosDatos = {
         presion: presion || "0",
         temperatura: temperatura || "0",
@@ -26,9 +27,9 @@ app.post('/api/datos', (req, res) => {
         fecha: new Date().toLocaleTimeString()
     };
     
-    console.log("Transmisión recibida con éxito:", ultimosDatos);
+    console.log("¡Datos recibidos con éxito vía GET!", ultimosDatos);
     
-    // Responder con éxito para que el ESP32 marque Código 200
+    // Responder con éxito al ESP32
     res.status(200).json({ estatus: "OK" });
 });
 
