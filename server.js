@@ -8,29 +8,26 @@ app.use(express.json());
 
 // Almacenamiento temporal en la memoria RAM del servidor
 let ultimosDatos = {
-    presion: "0",
-    temperatura: "0",
-    datoExtra: "0",
-    fecha: "Esperando transmisión del ESP32..."
+    temp1ra: "0", temp2da: "0", temp3ra: "0",
+    tempAgua: "0", tempAceite: "0", presionAceite: "0",
+    fecha: "Esperando arranque de Compresor No.1..."
 };
 
 // AHORA USAMOS GET: Recibe las variables directamente en la URL
 app.get('/api/enviar', (req, res) => {
-    // Extraer los parámetros de la URL (ej: ?presion=1012&temperatura=24&datoExtra=50)
-    const { presion, temperatura, datoExtra } = req.query;
+    const { temp1ra, temp2da, temp3ra, tempAgua, tempAceite, presionAceite } = req.query;
     
-    // Almacenar los datos en la memoria RAM del servidor
     ultimosDatos = {
-        presion: presion || "0",
-        temperatura: temperatura || "0",
-        datoExtra: datoExtra || "0",
+        temp1ra: temp1ra || "0",
+        temp2da: temp2da || "0",
+        temp3ra: temp3ra || "0",
+        tempAgua: tempAgua || "0",
+        tempAceite: tempAceite || "0",
+        presionAceite: presionAceite || "0",
         fecha: new Date().toLocaleTimeString()
     };
     
-    console.log("¡Datos recibidos con éxito vía GET!", ultimosDatos);
-    
-    // Responder con éxito al ESP32
-    res.status(200).json({ estatus: "OK" });
+    res.status(200).json({ estatus: "COMPRESOR_OK" });
 });
 
 // Mapear la ruta que el navegador usará mediante GET cada 3 segundos
